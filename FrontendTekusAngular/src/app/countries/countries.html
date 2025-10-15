@@ -1,0 +1,14 @@
+@if (loading()) {
+  <div class="container mt-4">Loading countries...</div>
+}
+
+@if (!loading()) {
+  <app-table-list
+    [titulo]="'List of Countries'"
+    [campos]="columns"
+    [datos]="countries()"
+    [page]="page()"
+    [totalRecords]="totalRecords()"
+    (onPageChange)="onPageChange($event)"
+  ></app-table-list>
+}

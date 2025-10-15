@@ -1,0 +1,6 @@
+@ApiRestTekus_HostAddress = http://localhost:5030
+
+GET {{ApiRestTekus_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
