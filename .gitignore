@@ -7,3 +7,8 @@ dist/
 bin/
 obj/
 *.user
+
+# IDEs
+.vs/
+.vscode/
+.idea/
