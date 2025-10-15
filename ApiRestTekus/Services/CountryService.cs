@@ -17,10 +17,15 @@ public class CountryService : ICountry
     /// Obtiene la lista de países
     /// </summary>
     /// <param name="page">Página</param>
+    /// <param name="search">Búsqueda por nombre</param>
     /// <returns>Lista de países</returns>
-    public async Task<PagedResult<CountryModel>> GetCountries(int page)
+    public async Task<PagedResult<CountryModel>> GetCountries(int page, string? search = null)
     {
-        var response = await _httpClientFactory.CreateClient().GetAsync("https://restcountries.com/v3.1/all?fields=cca2,name");
+        string url = string.IsNullOrWhiteSpace(search)
+            ? "https://restcountries.com/v3.1/all?fields=cca2,name"
+            : $"https://restcountries.com/v3.1/name/{search}?fields=cca2,name";
+
+        var response = await _httpClientFactory.CreateClient().GetAsync(url);
         
         if (!response.IsSuccessStatusCode)
             throw new Exception("No se ha podido obtener la lista de países, error: " + response.StatusCode);
@@ -31,13 +36,15 @@ public class CountryService : ICountry
         if (apiData == null)
             throw new Exception("No se ha podido obtener la lista de países");
 
-        var countries = apiData
+        var allCountries = apiData
             .Select(c => new CountryModel
             {
                 Id = c.cca2 ?? "",
                 Name = c.name?.common ?? ""
             })
-            .OrderBy(c => c.Name)
+            .OrderBy(c => c.Name);
+
+        var countries = allCountries
             .Skip((page - 1) * 10)
             .Take(10)
             .ToList();
@@ -45,7 +52,7 @@ public class CountryService : ICountry
         return new PagedResult<CountryModel>
         {
             ListFind = countries,
-            TotalRecords = apiData.Count,
+            TotalRecords = allCountries.Count(),
             PageNumber = page,
             PageSize = 10
         };

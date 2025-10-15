@@ -26,11 +26,12 @@ public class CountryController : ControllerBase
     /// Obtiene la lista de países
     /// </summary>
     /// <param name="page">Página</param>
+    /// <param name="search">Búsqueda por nombre</param>
     /// <returns>Lista de países</returns>
-    [HttpGet("countries")]
-    public async Task<IActionResult> GetCountries(int? page)
+    [HttpGet]
+    public async Task<IActionResult> GetCountries(int? page, string? search)
     {
-        var countries = await CountryService.GetCountries(page ?? 1);
+        var countries = await CountryService.GetCountries(page ?? 1, search);
         return Ok(new {
             data = countries,
             success = true,
