@@ -24,14 +24,14 @@ namespace ApiRestTekus.Models
         //     Tamaño de la página (cantidad de registros por página para paginación)
         public int? PageSize { get; set; } = 10;
 
-        public static PagedResult<T> PaginatedResponse(StoredProcedureResult<IEnumerable<T>> spResult)
+        public static PagedResult<T> PaginatedResponse(StoredProcedureResult<IEnumerable<T>> spResult, int pageNumber)
         {
             return new PagedResult<T>
             {
                 ListFind = spResult.Data ?? new List<T>(),
                 TotalRecords = spResult.TotalRecords ?? 0,
-                PageNumber = spResult.PageNumber ?? 1,
-                PageSize = spResult.PageSize ?? 10
+                PageNumber = pageNumber,
+                PageSize = 10
             };
         }
     }

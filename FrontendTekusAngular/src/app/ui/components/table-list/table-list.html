@@ -4,7 +4,14 @@
 
 @if (!loading()) {
 <div class="container mt-4">
-  <h2 class="mb-3">{{ titulo }}</h2>
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h2 class="mb-0">{{ titulo }}</h2>
+    @if (showAddButton) {
+    <button class="btn btn-primary" (click)="handleAdd()">
+      <i class="bi bi-plus-circle"></i> Agregar
+    </button>
+    }
+  </div>
   <div class="mb-3">
     <input 
       type="text" 
@@ -20,39 +27,23 @@
           @for (campo of campos; track campo.key) {
           <th scope="col">{{ campo.label }}</th>
           }
-          @if (onEdit.observed || onDelete.observed) {
-          <th scope="col">Actions</th>
-          }
         </tr>
       </thead>
       <tbody>
         @if (datos().length > 0) {
         @for (dato of datos(); track $index) {
-        <tr>
+        <tr 
+          [class.table-active]="selectedRow()?.Id === dato.Id"
+          style="cursor: pointer;"
+          (click)="selectRow(dato)">
           @for (campo of campos; track campo.key) {
           <td>{{ getValue(dato, campo.key) }}</td>
-          }
-          @if (onEdit.observed || onDelete.observed) {
-          <td>
-            <div class="btn-group" role="group">
-              @if (onEdit.observed) {
-              <button type="button" class="btn btn-sm btn-primary" (click)="handleEdit(dato)">
-                <i class="bi bi-pencil"></i> Edit
-              </button>
-              }
-              @if (onDelete.observed) {
-              <button type="button" class="btn btn-sm btn-danger" (click)="handleDelete(dato)">
-                <i class="bi bi-trash"></i> Delete
-              </button>
-              }
-            </div>
-          </td>
           }
         </tr>
         }
         } @else {
         <tr>
-          <td [attr.colspan]="campos.length + (onEdit.observed || onDelete.observed ? 1 : 0)" class="text-center">
+          <td [attr.colspan]="campos.length" class="text-center">
             No data to show
           </td>
         </tr>
@@ -60,7 +51,6 @@
       </tbody>
     </table>
   </div>
-  @if (totalPages > 1) {
   <nav aria-label="Pagination">
     <ul class="pagination justify-content-center">
       <li class="page-item" [class.disabled]="page() === 1">
@@ -108,6 +98,5 @@
       </small>
     </div>
   </nav>
-  }
 </div>
 }

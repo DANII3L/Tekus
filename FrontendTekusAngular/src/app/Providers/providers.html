@@ -1,1 +1,22 @@
-<app-table-list [titulo]="'List of Providers'" [campos]="columns" [inputSearch]="'provider/providers'"></app-table-list>
+<app-table-list 
+  [titulo]="'List of Providers'" 
+  [campos]="columns" 
+  [inputSearch]="'provider'"
+  [showAddButton]="true"
+  (onRowSelect)="onProviderSelect($event)"
+  (onAdd)="onAddProvider()">
+</app-table-list>
+
+<app-provider-services-modal
+  [provider]="selectedProvider()"
+  [showModal]="showServicesModal"
+  (onClose)="onServicesModalClose()"
+  (onSave)="onSaveServices($event)">
+</app-provider-services-modal>
+
+<app-provider-modal
+  [provider]="selectedProvider()"
+  [showModal]="showProviderModal"
+  (onClose)="onProviderModalClose()"
+  (onSave)="onSaveProvider($event)">
+</app-provider-modal>

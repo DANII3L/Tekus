@@ -1,0 +1,69 @@
+@if (showModal()) {
+<div class="modal fade show d-block" tabindex="-1" style="background-color: rgba(0,0,0,0.5);">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">{{ provider ? 'Editar Proveedor' : 'Agregar Proveedor' }}</h5>
+        <button type="button" class="btn-close" (click)="closeModal()"></button>
+      </div>
+      <div class="modal-body">
+        @if (errorMessage) {
+        <div class="alert alert-danger" role="alert">
+          {{ errorMessage }}
+        </div>
+        }
+        
+        <form>
+          <div class="mb-3">
+            <label for="providerNit" class="form-label">NIT <span class="text-danger">*</span></label>
+            <input 
+              type="text" 
+              class="form-control" 
+              id="providerNit"
+              [(ngModel)]="formData.nit"
+              name="nit"
+              placeholder="Ej: 900123456-7"
+              required>
+          </div>
+
+          <div class="mb-3">
+            <label for="providerName" class="form-label">Nombre del Proveedor <span class="text-danger">*</span></label>
+            <input 
+              type="text" 
+              class="form-control" 
+              id="providerName"
+              [(ngModel)]="formData.name"
+              name="name"
+              placeholder="Ej: Empresa ABC S.A.S."
+              required>
+          </div>
+
+          <div class="mb-3">
+            <label for="providerEmail" class="form-label">Email <span class="text-danger">*</span></label>
+            <input 
+              type="email" 
+              class="form-control" 
+              id="providerEmail"
+              [(ngModel)]="formData.email"
+              name="email"
+              placeholder="Ej: contacto@empresa.com"
+              required>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="closeModal()" [disabled]="isSubmitting">
+          Cancelar
+        </button>
+        <button type="button" class="btn btn-primary" (click)="saveProvider()" [disabled]="isSubmitting">
+          @if (isSubmitting) {
+          <span class="spinner-border spinner-border-sm me-2"></span>
+          }
+          {{ provider ? 'Actualizar' : 'Guardar' }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+}
+

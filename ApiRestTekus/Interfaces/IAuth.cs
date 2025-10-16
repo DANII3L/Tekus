@@ -9,5 +9,5 @@ public interface IAuth
     /// <param name="username">Nombre de usuario</param>
     /// <param name="password">Contraseña</param>
     /// <returns>Token JWT</returns>
-    string Login(string username, string password);
+    Task<string> Login(string username, string password);
 }

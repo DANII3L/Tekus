@@ -1,0 +1,195 @@
+@if (showModal()) {
+<div class="modal fade show d-block" tabindex="-1" style="background-color: rgba(0,0,0,0.5);">
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content">
+      
+      <div class="modal-header">
+        <h5 class="modal-title">Manage Services - {{ provider?.name }}</h5>
+        <button type="button" class="btn-close" (click)="closeModal()"></button>
+      </div>
+
+      <div class="modal-body">
+        
+        <div class="row mb-4">
+          <div class="col-md-6">
+            <h6>Available Services - Click to select</h6>
+            <app-table-list 
+              [titulo]="''" 
+              [campos]="serviceColumns" 
+              [inputSearch]="'service'"
+              (onRowSelect)="selectService($event)">
+            </app-table-list>
+          </div>
+
+          @if (selectedService()) {
+          <div class="col-md-6">
+            <h6>Available Countries - Click to add to "{{ selectedService()?.name }}"</h6>
+            
+            @if (editingService()?.id === selectedService()?.id) {
+            <div class="alert alert-info mb-2">
+              <small>
+                <i class="fas fa-info-circle"></i> 
+                Editing service: You can add/remove countries and modify service details
+              </small>
+            </div>
+            }
+            
+            <app-table-list 
+              [titulo]="''" 
+              [campos]="countryColumns" 
+              [inputSearch]="'country'"
+              (onRowSelect)="onCountryRowSelect($event)">
+            </app-table-list>
+          </div>
+          }
+        </div>
+
+        @if (selectedService()) {
+        <div class="row mb-4">
+          <div class="col-md-12">
+            <div class="alert" [ngClass]="editingService()?.id === selectedService()?.id ? 'alert-warning' : 'alert-info'">
+              <div class="d-flex justify-content-between align-items-center">
+                
+                <div>
+                  <h6 class="alert-heading">
+                    {{ editingService()?.id === selectedService()?.id ? 'Editing Service' : 'Service Preview' }}
+                  </h6>
+                  
+                  <p class="mb-2">
+                    <strong>Service:</strong> {{ selectedService()?.name }}<br>
+                    <strong>Rate:</strong> ${{ selectedService()?.hourlyRate }}<br>
+                    <strong>Countries:</strong> {{ (selectedService()?.countries || []).length }} assigned
+                  </p>
+                  
+                  @if ((selectedService()?.countries || []).length > 0) {
+                  <div class="d-flex flex-wrap gap-1">
+                    @for (country of selectedService()?.countries || []; track country.id) {
+                    <span class="badge bg-success me-1">
+                      {{ country.name?.common || country.name }}
+                      <button 
+                        type="button" 
+                        class="btn-close btn-close-white ms-1" 
+                        style="font-size: 0.7em;"
+                        (click)="removeCountryFromSelectedService(country)">
+                      </button>
+                    </span>
+                    }
+                  </div>
+                  } @else {
+                  <div class="text-muted">
+                    <small>No countries assigned yet</small>
+                  </div>
+                  }
+                </div>
+                
+                @if (editingService()?.id !== selectedService()?.id) {
+                <button type="button" class="btn btn-success" (click)="addServiceToSelected()">
+                  Add Service
+                </button>
+                } @else {
+                <div class="d-flex gap-2">
+                  <button type="button" class="btn btn-success" (click)="saveService()">
+                    Save Changes
+                  </button>
+                  <button type="button" class="btn btn-secondary" (click)="cancelEdit()">
+                    Cancel
+                  </button>
+                </div>
+                }
+              </div>
+            </div>
+          </div>
+        </div>
+        }
+
+        <div class="row">
+          <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+              <h6>Selected Services</h6>
+              <small class="text-muted">{{ selectedServices().length }} services selected</small>
+            </div>
+
+            <div class="table-responsive" style="max-height: 400px;">
+              <table class="table table-sm">
+                <thead class="table-dark">
+                  <tr>
+                    <th>Service</th>
+                    <th>Rate</th>
+                    <th>Countries</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  @for (service of selectedServices(); track service.id) {
+                  <tr>
+                    <td>
+                      <span>{{ service.serviceName }}</span>
+                    </td>
+
+                    <td>
+                      <span>${{ service.hourlyRate }}</span>
+                    </td>
+
+                    <td>
+                      <div class="d-flex flex-wrap gap-1">
+                        @for (country of service.countries || []; track country.id) {
+                        <span class="badge bg-success me-1">
+                          {{ country.name?.common || country.name }}
+                        </span>
+                        }
+                        @if ((service.countries || []).length === 0) {
+                        <span class="text-muted">No countries assigned</span>
+                        }
+                      </div>
+                    </td>
+
+                    <td>
+                      <div class="btn-group" role="group">
+                        @if (editingService()?.id !== service.id) {
+                        <button type="button" class="btn btn-sm btn-warning" (click)="onEditClick(service)">
+                          Edit
+                        </button>
+                        } @else {
+                        <button type="button" class="btn btn-sm btn-success" (click)="saveService()">
+                          Save
+                        </button>
+                        <button type="button" class="btn btn-sm btn-secondary" (click)="cancelEdit()">
+                          Cancel
+                        </button>
+                        }
+                        <button type="button" class="btn btn-sm btn-danger" (click)="removeService(service)">
+                          Remove
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                  }
+                </tbody>
+              </table>
+            </div>
+
+            @if (selectedServices().length === 0) {
+            <div class="text-center text-muted py-3">
+              No services selected. Click on available services to add them.
+            </div>
+            }
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="closeModal()">
+          Cancel
+        </button>
+        <button 
+          type="button" 
+          class="btn btn-primary" 
+          [disabled]="selectedServices().length === 0" 
+          (click)="saveAll()">
+          Save Configuration
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+}

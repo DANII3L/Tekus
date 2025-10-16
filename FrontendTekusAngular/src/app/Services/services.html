@@ -1,1 +1,15 @@
-<p>servicios works!</p>
+<app-table-list 
+  [titulo]="'List of Services'" 
+  [campos]="columns" 
+  [inputSearch]="'service'"
+  [showAddButton]="true"
+  (onAdd)="onAddService()"
+  (onRowSelect)="onRowSelect($event)">
+</app-table-list>
+
+<app-service-modal
+  [service]="selectedService()"
+  [showModal]="showModal"
+  (onClose)="onModalClose()"
+  (onSave)="onSaveService($event)">
+</app-service-modal>

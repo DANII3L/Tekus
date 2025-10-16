@@ -4,6 +4,11 @@ using Microsoft.AspNetCore.Mvc;
 [Route("api/[controller]")]
 public class AuthController : ControllerBase
 {
+    private readonly IAuth _authService;
+    public AuthController(IAuth authService)
+    {
+        _authService = authService;
+    }
     /// <summary>
     /// Inicia sesión de usuario
     /// </summary>
@@ -14,9 +19,13 @@ public class AuthController : ControllerBase
     [HttpPost("login")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-    public IActionResult Login([FromBody] AuthModel model)
+    public async Task<IActionResult> Login([FromBody] AuthModel model)
     {
-        // Tu lógica aquí
-        return Ok(new { token = "..." });
+        var token = await _authService.Login(model.Username, model.Password);
+        return Ok(new {
+            data = token,
+            success = true,
+            message = "Login exitoso"
+        });
     }
 }

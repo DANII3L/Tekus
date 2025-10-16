@@ -13,14 +13,16 @@ export class TableList implements OnInit{
   @Input() titulo: string = '';
   @Input() campos: Column[] = [];
   @Input() inputSearch: string = '';
-  @Output() onEdit = new EventEmitter<any>();
-  @Output() onDelete = new EventEmitter<any>();
+  @Input() showAddButton: boolean = false;
+  @Output() onRowSelect = new EventEmitter<any>();
+  @Output() onAdd = new EventEmitter<void>();
 
   datos = signal<any[]>([]);
   loading = signal(true);
   page = signal(1);
   totalRecords = signal(0);
   searchTerm = '';
+  selectedRow = signal<any>(null);
   private searchTimeout?: number;
   
   constructor(private apiService: ApiService) {}
@@ -45,12 +47,9 @@ export class TableList implements OnInit{
     return Math.ceil(this.totalRecords() / 10);
   }
 
-  handleEdit(item: any): void {
-    this.onEdit.emit(item);
-  }
-
-  handleDelete(item: any): void {
-    this.onDelete.emit(item);
+  selectRow(item: any): void {
+    this.selectedRow.set(item);
+    this.onRowSelect.emit(item);
   }
 
   getValue(dato: any, key: string): any {
@@ -110,6 +109,15 @@ export class TableList implements OnInit{
 
   onPageChange(newPage: number): void {
     this.page.set(newPage);
+    this.loading.set(true);
+    this.loadData();
+  }
+
+  handleAdd(): void {
+    this.onAdd.emit();
+  }
+
+  reload(): void {
     this.loading.set(true);
     this.loadData();
   }

@@ -1,0 +1,12 @@
+.modal.show {
+  display: block;
+}
+
+.form-label {
+  font-weight: 500;
+}
+
+.text-danger {
+  color: #dc3545;
+}
+

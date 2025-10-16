@@ -1,5 +1,11 @@
 using ApiRestTekus.Models;
-public interface IProvider
+
+namespace ApiRestTekus.Interfaces
 {
-    Task<PagedResult<ProviderModel>> GetProviders(int page);
+    public interface IProvider
+    {
+        Task<PagedResult<ProviderModel>> GetProviders(int page, string? filter = null);
+        Task<ProviderModel> CreateProvider(ProviderModel provider);
+        Task<ProviderModel> UpdateProvider(ProviderModel provider);
+    }
 }

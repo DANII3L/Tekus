@@ -11,27 +11,20 @@ namespace ApiRestTekus.Models
         /// <summary>
         /// Obtener o establecer el nombre
         /// </summary>
-        [Required]
-        [JsonPropertyName("name")]
-        public string Name { get; set; }
+        [JsonPropertyName("id")]
+        public int? Id { get; set; }
         /// <summary>
         /// Obtener o establecer la descripción
         /// </summary>
         [Required]
-        [JsonPropertyName("description")]
-        public string Description { get; set; }
+        [JsonPropertyName("nit")]
+        public string Nit { get; set; }
         /// <summary>
         /// Obtener o establecer la dirección
         /// </summary>
         [Required]
-        [JsonPropertyName("address")]
-        public string Address { get; set; }
-        /// <summary>
-        /// Obtener o establecer el teléfono
-        /// </summary>
-        [Required]
-        [JsonPropertyName("phone")]
-        public string Phone { get; set; }
+        [JsonPropertyName("name")]
+        public string Name { get; set; }
         /// <summary>
         /// Obtener o establecer el email
         /// </summary>

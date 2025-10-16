@@ -9,9 +9,7 @@ import Swal from 'sweetalert2';
 })
 export class ApiService {
   private baseURL = 'http://localhost:5000/api/';
-  private headers = new HttpHeaders({ 'Content-Type': 'application/json' });
 
-  // Toast configurado para no interrumpir
   private Toast = Swal.mixin({
     toast: true,
     position: 'top-end',
@@ -26,6 +24,17 @@ export class ApiService {
 
   constructor(private http: HttpClient) {}
 
+  private getHeaders(): HttpHeaders {
+    const token = localStorage.getItem('token');
+    let headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    
+    if (token) {
+      headers = headers.set('Authorization', `Bearer ${token}`);
+    }
+    
+    return headers;
+  }
+
   private handleError = (error: any): Observable<never> => {
     const errorMessage = error.error?.message || error.message || 'An error occurred';
     
@@ -39,22 +48,22 @@ export class ApiService {
   }
 
   get<T>(endpoint: string): Observable<any> {
-    return this.http.get<any>(`${this.baseURL}${endpoint}`, { headers: this.headers })
+    return this.http.get<any>(`${this.baseURL}${endpoint}`, { headers: this.getHeaders() })
       .pipe(catchError(this.handleError));
   }
 
   post<T>(endpoint: string, data: any): Observable<any> {
-    return this.http.post<any>(`${this.baseURL}${endpoint}`, data, { headers: this.headers })
+    return this.http.post<any>(`${this.baseURL}${endpoint}`, data, { headers: this.getHeaders() })
       .pipe(catchError(this.handleError));
   }
 
   put<T>(endpoint: string, data: any): Observable<any> {
-    return this.http.put<any>(`${this.baseURL}${endpoint}`, data, { headers: this.headers })
+    return this.http.put<any>(`${this.baseURL}${endpoint}`, data, { headers: this.getHeaders() })
       .pipe(catchError(this.handleError));
   }
 
   delete<T>(endpoint: string): Observable<any> {
-    return this.http.delete<any>(`${this.baseURL}${endpoint}`, { headers: this.headers })
+    return this.http.delete<any>(`${this.baseURL}${endpoint}`, { headers: this.getHeaders() })
       .pipe(catchError(this.handleError));
   }
 }

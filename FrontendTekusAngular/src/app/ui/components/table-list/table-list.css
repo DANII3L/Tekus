@@ -17,3 +17,18 @@
   color: white;
 }
 
+/* Estilo para la fila seleccionada */
+.table-active {
+  background-color: #f8f9fa !important;
+}
+
+/* Hover effect para las filas */
+.table-hover tbody tr:hover {
+  background-color: rgba(0, 0, 0, 0.075);
+}
+
+/* Asegurar que la fila seleccionada mantenga su color incluso con hover */
+.table-active:hover {
+  background-color: #f8f9fa !important;
+}
+
